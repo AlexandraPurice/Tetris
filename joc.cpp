@@ -30,7 +30,7 @@ int figures[7][4] =
 bool check()
 {
 	int i;
-	for ( i = 0; i<4; i++)
+	for (i = 0; i<4; i++)
 		if (a[i].x<0 || a[i].x >= N || a[i].y >= M)
 			return 0;
 		else
@@ -40,10 +40,11 @@ bool check()
 	return 1;
 };
 
+int score, t;
 
 int main()
 {
-	int i, j,n, colorNum,dx;
+	int i, j, n, colorNum, dx;
 	bool rotate;
 	float timer, delay;
 	srand(time(0));
@@ -90,18 +91,31 @@ int main()
 			delay = 0.05;
 
 		//MUTARE
-		for ( i = 0; i<4; i++)
+		for (i = 0; i<4; i++)
 		{
 			b[i] = a[i];
 			a[i].x += dx;
 		}
 		if (!check())
-			for ( i = 0; i<4; i++)
+			for (i = 0; i<4; i++)
 				a[i] = b[i];
 
+		//ROTARE PIESE
+		if (rotate)
+		{
+			Point p = a[1]; //center of rotation
+			for (i = 0; i<4; i++)
+			{
+				int x = a[i].y - p.y;
+				int y = a[i].x - p.x;
+				a[i].x = p.x - x;
+				a[i].y = p.y + y;
+			}
+			if (!check())
+				for (i = 0; i<4; i++)
+					a[i] = b[i];
+		}
 		dx = 0; rotate = 0; delay = 0.3;
-
-
 		window.draw(frame);
 		window.display();
 	}
@@ -114,3 +128,4 @@ int main()
 
 
 
+1
