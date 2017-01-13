@@ -1,21 +1,15 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include <sstream>
-
 using namespace sf;
-
 const int M = 20;
 const int N = 10;
-
 int field[M][N] = { 0 };
-
 struct Point
 {
 	int x, y;
 } a[4], b[4];
-
 int figures[7][4] =
 {
 	1,3,5,7, // I
@@ -26,7 +20,6 @@ int figures[7][4] =
 	3,5,7,6, // J
 	2,3,4,5, // O
 };
-
 bool check()
 {
 	int i;
@@ -39,9 +32,7 @@ bool check()
 
 	return 1;
 };
-
 int score, t;
-
 int main()
 {
 	int i, j, n, colorNum, dx;
@@ -70,6 +61,24 @@ int main()
 		float time = clock.getElapsedTime().asSeconds();
 		clock.restart();
 		timer += time;
+		for (j = 0; j < M; j++)
+			if (field[0][j] == 1)
+			{
+
+				sf::Font arial;
+				arial.loadFromFile("arial.ttf");
+
+				std::ostringstream end;
+				//end << "GAME OVER";
+				end << "Score: " << std::endl;
+				sf::Text FINALGAMES;
+
+				FINALGAMES.setCharacterSize(50);
+				FINALGAMES.setPosition({ 200, 200 });
+				FINALGAMES.setFont(arial);
+				FINALGAMES.setString(end.str());
+			}
+
 		Event e;
 		while (window.pollEvent(e))
 		{
@@ -115,17 +124,67 @@ int main()
 				for (i = 0; i<4; i++)
 					a[i] = b[i];
 		}
+
+		//score
+		//int score = 0;
+
+		sf::Font arial;
+		arial.loadFromFile("arial.ttf");
+
+		std::ostringstream ssScore;
+		ssScore << "Score: " << std::endl;
+		ssScore << score;
+
+		sf::Text lblScore;
+
+		lblScore.setCharacterSize(20);
+		lblScore.setPosition({ 220, 200 });
+		lblScore.setFont(arial);
+		lblScore.setString(ssScore.str());
+		//elimina linie
+		int k = M - 1;
+		for (i = M - 1; i > 0; i--)
+		{
+			int count = 0;
+			for (j = 0; j < N; j++)
+			{
+				if (field[i][j])
+					count++;
+				field[k][j] = field[i][j];
+
+
+				if (count >= N - 1 + 1)
+				{
+					t++;
+					lblScore.setCharacterSize(20);
+					lblScore.setPosition({ 220, 200 });
+					lblScore.setFont(arial);
+					lblScore.setString(ssScore.str());
+					score = score + 10;
+					ssScore.str("");
+					ssScore << "Score " << score;
+					lblScore.setString(ssScore.str());
+				}
+			}
+			if (t == 6)
+			{
+				t = 0;
+				lblScore.setCharacterSize(20);
+				lblScore.setPosition({ 220, 200 });
+				lblScore.setFont(arial);
+				lblScore.setString(ssScore.str());
+				score = score + 40;
+				ssScore.str("");
+				ssScore << "Score " << score;
+				lblScore.setString(ssScore.str());
+			}
+			if (count < N)
+				k--;
+		}
 		dx = 0; rotate = 0; delay = 0.3;
 		window.draw(frame);
+		window.draw(lblScore);
 		window.display();
 	}
-
 	return 0;
 }
-
-
-
-
-
-
-1
